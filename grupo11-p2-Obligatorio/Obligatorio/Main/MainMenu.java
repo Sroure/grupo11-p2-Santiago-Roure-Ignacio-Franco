@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.Scanner;
 
 public class MainMenu {
+
     public static void main(String[] args) {
         System.out.println("Menu Principal");
         System.out.println("Seleccione una opcion");
