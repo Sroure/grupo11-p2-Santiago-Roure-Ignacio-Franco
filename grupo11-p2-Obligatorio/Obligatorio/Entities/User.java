@@ -3,7 +3,7 @@ package Entities;
 public class User {
     long id;
     String name;
-
+    // tengo que agregar los tweets de cada usuario
     public long getId() {
         return id;
     }
