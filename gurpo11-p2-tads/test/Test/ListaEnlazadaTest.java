@@ -2,7 +2,6 @@ package Test;
 
 import LinkedList.ListaEnlazada;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ListaEnlazadaTest {

@@ -1,8 +1,13 @@
 package Entities;
 
 public class HashTag {
-    long id;
-    String text;
+    private long id;
+    private String text;
+
+    public HashTag(long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
 
     public long getId() {
         return id;

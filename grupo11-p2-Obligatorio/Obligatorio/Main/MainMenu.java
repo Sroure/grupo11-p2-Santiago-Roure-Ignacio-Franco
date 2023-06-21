@@ -1,22 +1,28 @@
 package Main;
+import Entities.Tweet;
+import Entities.User;
+import Hash.MyHash;
+import Hash.MyHashImpl;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-
+import LinkedList.Lista;
 import LinkedList.ListaEnlazada;
+
+import javax.sound.midi.SysexMessage;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class MainMenu {
-
+//*************************************** Menu Principal **************************************************
     public static void main(String[] args) {
 
         System.out.println("Menu Principal");
         System.out.println("Seleccione una opcion");
+        System.out.println("0- Cargar datos");
         System.out.println("1- Listar los 10 pilotos activos en la temporada 2023 mas mencionados en los tweets en un mes");
         System.out.println("2- Top 15 usuarios con mas tweets");
         System.out.println("3- Cantidad de Hashtags distintos para un dia dado");
@@ -27,14 +33,21 @@ public class MainMenu {
         System.out.println("Ingresar Numero: ");
         Scanner input = new Scanner(System.in);
         int option = input.nextInt();
-        while(option < 1 || option > 7){
+        while (option < 1 || option > 7) {
             System.out.println("Opcion invalida");
             System.out.println("Ingresar Numero: ");
             option = input.nextInt();
         }
-        switch (option){
+        switch (option) {
+            case 0:
+                CSVReader.CargaDeDatos();
+                break;
             case 1:
+                if (ingresoFecha() !=0){
 
+                }else{
+                    break;
+                }
 
             case 2:
 
@@ -57,43 +70,97 @@ public class MainMenu {
 
 
     }
+    public static int ingresoFecha(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Ingrese el año: ");
+        int inputano = Integer.parseInt(input.nextLine());
+        if (inputano == 2023){
+            System.out.println("Ingrese el mes: ");
+            int inputmes = Integer.parseInt(input.nextLine());
+            if (inputmes < 13 && inputmes >0){
+                return inputmes;
+            }else{
+                System.out.println("Mes invalido");
+                System.exit(1);
+            }
+        }else{
+            System.out.println("Año invalido");
+            System.exit(1);
+        }
 
+   return 0;
+    }
 
+    //*************************************** Carga de datos del CSV **************************************************
     public class CSVReader {
-        public static void main(String[] args) {
-            String csvFile = "C:/Users/santi/Downloads/archivosCSV/f1_dataset.csv";
-
+        public static void CargaDeDatos() {
+            String csvFile = "C:/Users/santi/Downloads/archivosCSV/f1_dataset_test.csv";
+            MyHash<Long, User> ListaUsuarios = new MyHashImpl<>(100000);// la lista de usuarios es un hash
+            Lista<Tweet> ListaTweets = new ListaEnlazada(); // la lista de tweets es una lista enlazada
+            Lista<String> ListaPilotos = new ListaEnlazada(); // la lista de pilotos es una lista enlazada
+            int cantidadTweets = 0;
             try (Reader reader = new FileReader(csvFile);
                  CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
 
                 for (CSVRecord csvRecord : csvParser) {
-                    // Acceder a los valores de cada columna por su índice o nombre
-                    String columna1 = csvRecord.get(0);
-                    String columna2 = csvRecord.get(1);
-                    String columna3 = csvRecord.get(2);
-                    String columna4 = csvRecord.get(3);
-                    String columna5 = csvRecord.get(4);
-                    String columna6 = csvRecord.get(5);
-                    String columna7 = csvRecord.get(6);
-                    String columna8 = csvRecord.get(7);
-                    String columna9 = csvRecord.get(8);
-                    String columna10 = csvRecord.get(9);
-                    String columna11 = csvRecord.get(10);
-                    String columna12 = csvRecord.get(11);
-                    String columna13 = csvRecord.get(12);
-                    String columna14 = csvRecord.get(13);
+                    String nombreUsuario = csvRecord.get(1);
+                    String fechaTweet = csvRecord.get(9);
+                    Long idTweet = crearid(fechaTweet); // creo un id a partir de la fecha con hashcode
+                    String contenidoTweet = csvRecord.get(10);
+                    String sourceTweet = csvRecord.get(12);
+                    String usuarioFechaCreado = csvRecord.get(4);
+                    Long idUsuario = crearid(usuarioFechaCreado); // creo un id a partir de la fecha con hashcode
+                    boolean isretweet;
+                    try {
+                        isretweet = Boolean.parseBoolean(csvRecord.get(13));
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    boolean usuarioVerificado;
+                    try {
+                        usuarioVerificado = Boolean.parseBoolean(csvRecord.get(8));
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
                     // Realizar alguna operación con los datos
-                    ListaEnlazada ListaUsuarios = new ListaEnlazada<>();
-                    ListaEnlazada ListaTweets = new ListaEnlazada<>();
-                    ListaEnlazada ListaHashtags = new ListaEnlazada<>();
-                    ListaUsuarios.addLast(columna1);
-                    ListaUsuarios.imprimirDatos();
+
+                    if (!ListaUsuarios.search(idUsuario)) { // Aqui verifico si el usuario esta o no en la lista y lo agrego
+                        User nuevousuario = new User(idUsuario, nombreUsuario,usuarioVerificado);
+                        ListaUsuarios.insert(idUsuario, nuevousuario);
+                    }
+                    Tweet nuevotweet = new Tweet(idTweet, contenidoTweet, sourceTweet,fechaTweet ,isretweet);
+                    ListaTweets.addFirst(nuevotweet);
+                    cantidadTweets++;
+
+                }
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+//********************CargaNombresPilotostxt*************************
+            try (FileReader fileReader = new FileReader("C:/Users/santi/Downloads/archivosCSV/drivers.txt");
+                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    ListaPilotos.addFirst(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            }
+
+
+
+
+
+    }
+
+        public static Long crearid(String fecha) {
+            int hash = fecha.hashCode();
+            int hashAbs = Math.abs(hash);
+            return (long) hashAbs;
+
         }
     }
 
-}
 

@@ -1,10 +1,20 @@
 package Entities;
 
 public class Tweet {
-    long id;
-    String content;
-    String source;
-    Boolean isRetweet;
+    private long id;
+    private String content;
+    private String source;
+    private Boolean isRetweet;
+    private String fechaTweet;
+
+    public Tweet(long id, String content, String source,String fechaTweet ,Boolean isRetweet) {
+        this.id = id;
+        this.content = content;
+        this.source = source;
+        this.isRetweet = isRetweet;
+        this.fechaTweet = fechaTweet;
+
+    }
 
     public long getId() {
         return id;
@@ -36,5 +46,13 @@ public class Tweet {
 
     public void setRetweet(Boolean retweet) {
         isRetweet = retweet;
+    }
+
+    public String getFechaTweet() {
+        return fechaTweet;
+    }
+
+    public void setFechaTweet(String fechaTweet) {
+        this.fechaTweet = fechaTweet;
     }
 }
