@@ -1,10 +1,25 @@
 package Entities;
 
+import java.util.Objects;
+
 public class User implements Comparable<User> {
     private long id;
     private String name;
     private boolean verificado;
     private String fechaCreado;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
     // tengo que agregar los tweets de cada usuario
 
     public User(long id, String name, boolean verificado) {

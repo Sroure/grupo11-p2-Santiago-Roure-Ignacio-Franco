@@ -1,5 +1,7 @@
 package Entities;
 
+import java.util.Objects;
+
 public class Tweet {
     private long id;
     private String content;
@@ -54,5 +56,18 @@ public class Tweet {
 
     public void setFechaTweet(String fechaTweet) {
         this.fechaTweet = fechaTweet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tweet tweet = (Tweet) o;
+        return id == tweet.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
