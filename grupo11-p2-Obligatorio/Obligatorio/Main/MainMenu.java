@@ -1,4 +1,5 @@
 package Main;
+import Entities.Piloto;
 import Entities.Tweet;
 import Entities.User;
 import Hash.MyHash;
@@ -14,6 +15,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
+import static Main.Consultas.ListarPilotosMasMencionados;
+import static Main.MainMenu.CSVReader.ListaPilotos;
+import static Main.MainMenu.CSVReader.ListaTweets;
 
 public class MainMenu {
     //*************************************** Menu Principal **************************************************
@@ -49,8 +53,9 @@ public class MainMenu {
                 CSVReader.CargaDeDatos();
                 break;
             case 1:
-                if (ingresoFecha() != 0) {
-
+                if (ingresoFecha() != null) {
+                    String mes = ingresoFecha();
+                    ListarPilotosMasMencionados(mes,(MyHashImpl<Long, Tweet>) ListaTweets, ListaPilotos);
                 } else {
                     break;
                 }
@@ -79,7 +84,7 @@ public class MainMenu {
 
 
 }
-    public static int ingresoFecha(){
+    public static String ingresoFecha(){
         Scanner input = new Scanner(System.in);
         System.out.println("Ingrese el año: ");
         int inputano = Integer.parseInt(input.nextLine());
@@ -87,7 +92,9 @@ public class MainMenu {
             System.out.println("Ingrese el mes: ");
             int inputmes = Integer.parseInt(input.nextLine());
             if (inputmes < 13 && inputmes >0){
-                return inputmes;
+                String mes1 = Integer.toString(inputmes);
+                return mes1;
+
             }else{
                 System.out.println("Mes invalido");
                 System.exit(1);
@@ -97,19 +104,20 @@ public class MainMenu {
             System.exit(1);
         }
 
-   return 0;
+   return null;
     }
-
+    //*****************************************************************************************************************
     //*************************************** Carga de datos del CSV **************************************************
+    //*****************************************************************************************************************
     public class CSVReader {
         public static MyHash<Long,User> ListaUsuarios;
-        public static Lista<Tweet> ListaTweets;
-        public static Lista<String> ListaPilotos;
+        public static MyHash<Long,Tweet> ListaTweets;
+        public static Lista<Piloto> ListaPilotos;
         public static void CargaDeDatos() {
             String csvFile = "C:/Users/santi/Downloads/archivosCSV/f1_dataset_test.csv";
             ListaUsuarios = new MyHashImpl<>(100000);// la lista de usuarios es un hash
-            ListaTweets = new ListaEnlazada(); // la lista de tweets es una lista enlazada
-            ListaPilotos = new ListaEnlazada(); // la lista de pilotos es una lista enlazada
+            ListaTweets = new MyHashImpl<>(10000); // la lista de tweets es una lista enlazada
+            ListaPilotos = new ListaEnlazada<>(); // la lista de pilotos es una lista enlazada
             int cantidadTweets = 0;
 
             try (Reader reader = new FileReader(csvFile);
@@ -143,38 +151,74 @@ public class MainMenu {
                         ListaUsuarios.insert(idUsuario, nuevousuario);
                     }
                     Tweet nuevotweet = new Tweet(idTweet, contenidoTweet, sourceTweet,fechaTweet ,isretweet);
-                    ListaTweets.addFirst(nuevotweet);
+                    ListaTweets.insert(idTweet,nuevotweet);
                     cantidadTweets++;
 
                 }
                 } catch(IOException e){
                     e.printStackTrace();
                 }
+
 //********************CargaNombresPilotostxt*************************
             try (FileReader fileReader = new FileReader("C:/Users/santi/Downloads/archivosCSV/drivers.txt");
                  BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    ListaPilotos.addFirst(line);
+                    String nombre = line;
+                    Piloto piloto = new Piloto(nombre, 0);
+                    ListaPilotos.agregar(piloto);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             }
 
+// *********************************Getters y setters****************************************
 
 
+        public static MyHash<Long, User> getListaUsuarios() {
+            return ListaUsuarios;
+        }
+
+        public static void setListaUsuarios(MyHash<Long, User> listaUsuarios) {
+            ListaUsuarios = listaUsuarios;
+        }
+
+        public static MyHash<Long, Tweet> getListaTweets() {
+            return ListaTweets;
+        }
+
+        public static void setListaTweets(MyHash<Long, Tweet> listaTweets) {
+            ListaTweets = listaTweets;
+        }
+
+        public static Lista<Piloto> getListaPilotos() {
+            return ListaPilotos;
+        }
+
+        public static void setListaPilotos(Lista<Piloto> listaPilotos) {
+            ListaPilotos = listaPilotos;
+        }
+    }//fin de la clase CSVReader
 
 
-    }
 
         public static Long crearid(String fecha) {
             int hash = fecha.hashCode();
             int hashAbs = Math.abs(hash);
             return (long) hashAbs;
 
+
+
         }
-    }
+
+
+
+
+
+
+}//fin de la clase Main
+
 
 
