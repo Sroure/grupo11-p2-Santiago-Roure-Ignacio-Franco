@@ -1,4 +1,5 @@
 package Main;
+import Entities.HashTag;
 import Entities.Piloto;
 import Entities.Tweet;
 import Entities.User;
@@ -24,7 +25,6 @@ public class MainMenu {
     public static void main(String[] args) {// menu principal
         int option = 0;
         Scanner input = new Scanner(System.in);
-
 
         while (true) {
             System.out.println("Menu Principal");
@@ -80,7 +80,7 @@ public class MainMenu {
         Scanner input = new Scanner(System.in);
         System.out.println("Ingrese el año: ");
         int inputano = Integer.parseInt(input.nextLine());
-        if (inputano == 2023){
+        if (inputano < 2023 && inputano >= 2020){
             System.out.println("Ingrese el mes: ");
             int inputmes = Integer.parseInt(input.nextLine());
             if (inputmes < 13 && inputmes >0){
@@ -104,12 +104,14 @@ public class MainMenu {
     public class CSVReader {
         public static MyHash<Long,User> ListaUsuarios;
         public static MyHash<Long,Tweet> ListaTweets;
+        public static MyHash<Long, HashTag> ListaHashTags;
         public static Lista<Piloto> ListaPilotos;
         public static void CargaDeDatos() {
             String csvFile = "C:/Users/santi/Downloads/archivosCSV/f1_dataset_test.csv";
             ListaUsuarios = new MyHashImpl<>(10000000);// la lista de usuarios es un hash
             ListaTweets = new MyHashImpl<>(10000000); // la lista de tweets es una lista enlazada
             ListaPilotos = new ListaEnlazada<>(); // la lista de pilotos es una lista enlazada
+            ListaHashTags = new MyHashImpl<>(10000000); // la lista de hashtags es un hash
             int cantidadTweets = 0;
 
             try (Reader reader = new FileReader(csvFile);
@@ -136,6 +138,8 @@ public class MainMenu {
                     } catch (NumberFormatException e) {
                         continue;
                     }
+                    // Carga de HASHTAGS**********
+                    String[] hashtags = csvRecord.get(11).replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",");
                     // Realizar alguna operación con los datos
 
                     if (!ListaUsuarios.search(idUsuario)) { // Aqui verifico si el usuario esta o no en la lista y lo agrego
@@ -152,6 +156,7 @@ public class MainMenu {
                 }
             System.out.println("EL tamaño de la lista de tweets es: " + cantidadTweets);
             System.out.println("EL tamaño de la lista de usuarios es: " + ListaUsuarios.elementosEnTabla());
+
 //********************CargaNombresPilotostxt*************************
             try (FileReader fileReader = new FileReader("C:/Users/santi/Downloads/archivosCSV/drivers.txt");
                  BufferedReader bufferedReader = new BufferedReader(fileReader)) {
@@ -165,7 +170,11 @@ public class MainMenu {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            }
+            ListaPilotos.largo();// es el largo de la lista de pilotos
+
+
+        }// fin de la carga de datos
+
 
 // *********************************Getters y setters****************************************
 

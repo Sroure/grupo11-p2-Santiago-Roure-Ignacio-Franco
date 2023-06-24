@@ -16,6 +16,7 @@ public class Tweet {
         this.isRetweet = isRetweet;
         this.fechaTweet = fechaTweet;
 
+
     }
 
     public long getId() {

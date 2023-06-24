@@ -19,21 +19,24 @@ public class Consultas {
     public static void ListarPilotosMasMencionados(String mes, MyHashImpl<Long, Tweet> ListaTweets, Lista<Piloto> ListaPilotos) {
         MyHeap<Piloto> mencionesPilotos = new MyHeapImpl<>(20);// quiero recorrer la lista de tweets y fijarme la cantidad de veces que aparece cada piloto en los tweets
         for (int i = 0; i < ListaTweets.elementosEnTabla(); i++) {// elementos en la talbla es el size
-            if (ListaTweets.get((long) i).getFechaTweet().contains(mes)){
+            Tweet tweet = ListaTweets.get((long) i);
+            if (tweet != null && tweet.getFechaTweet().contains(mes)){
+                System.out.println("Fecha del tweet: " + tweet.getFechaTweet() + " Contenido del tweet: " + tweet.getContent());
                 for (int j = 0; j < ListaPilotos.largo(); j++) {
+                    System.out.println("Buscando menciones del piloto: " + ListaPilotos.get(j).getNombre());
                     // verifico si el tweet es de ese piloto
-                        if (ListaTweets.get((long) i).getContent().contains(ListaPilotos.get(j).getNombre())) {
+                        if (tweet.getContent().contains(ListaPilotos.get(j).getNombre())) {
                             ListaPilotos.get(j).setCantidadMencion(ListaPilotos.get(j).getCantidadMencion() + 1);
                             mencionesPilotos.insert(ListaPilotos.get(j));// ahora lo que quiero es insertarlos en la lista menciones pilotos;
+                            System.out.println("Piloto mencionado: " + ListaPilotos.get(j).getNombre() + " Cantidad de menciones: " + ListaPilotos.get(j).getCantidadMencion());
                             break;
                         }
-                        for (int x = 0; x < 10; x++) {
-                            System.out.println(mencionesPilotos.getMax().getNombre());
-                            mencionesPilotos.delete();
-                        }
-
                 }
             }
+        }// imprimir los 10 pilotos mas mencionados
+        for (int x = 0; x < 10; x++) {
+            System.out.println(mencionesPilotos.getMax().getNombre());
+            mencionesPilotos.delete();
         }
 
     }
