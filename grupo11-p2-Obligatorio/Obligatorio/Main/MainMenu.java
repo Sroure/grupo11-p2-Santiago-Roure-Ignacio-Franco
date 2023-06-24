@@ -4,6 +4,7 @@ import Entities.Tweet;
 import Entities.User;
 import Hash.MyHash;
 import Hash.MyHashImpl;
+import exceptions.ErrorAlCargarDatos;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -16,14 +17,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
 import static Main.Consultas.ListarPilotosMasMencionados;
-import static Main.MainMenu.CSVReader.ListaPilotos;
-import static Main.MainMenu.CSVReader.ListaTweets;
+import static Main.MainMenu.CSVReader.*;
 
 public class MainMenu {
     //*************************************** Menu Principal **************************************************
-    public static void main(String[] args) {
+    public static void main(String[] args) {// menu principal
         int option = 0;
         Scanner input = new Scanner(System.in);
+
 
         while (true) {
             System.out.println("Menu Principal");
@@ -37,53 +38,44 @@ public class MainMenu {
             System.out.println("6- Cantidad de tweets con una palabra o frase especificos");
             System.out.println("7- Salir");
             System.out.println("Ingresar Numero: ");
-
             option = input.nextInt();
             input.nextLine();
 
             if (option >= 0 && option <= 7) {
-                break; // Salir del bucle si el número está dentro del rango válido
+                switch (option) {
+                    case 0:
+                        CSVReader.CargaDeDatos();
+                        break;
+                    case 1:
+                        ListarPilotosMasMencionados(ingresoFecha(),(MyHashImpl<Long, Tweet>) ListaTweets, ListaPilotos);
+                        break;
+                    case 2:
+                        // Lógica para la opción 2
+                        break;
+                    case 3:
+                        // Lógica para la opción 3
+                        break;
+                    case 4:
+                        // Lógica para la opción 4
+                        break;
+                    case 5:
+                        // Lógica para la opción 5
+                        break;
+                    case 6:
+                        // Lógica para la opción 6
+                        break;
+                    case 7:
+                        System.out.println("Saliendo del programa...\nGracias por usar el programa");
+                        return; // Terminar la ejecución del programa
+                    default:
+                        System.out.println("Opcion invalida");
+                        break;
+                }
             } else {
                 System.out.println("Opcion invalida");
             }
         }
-
-        switch (option) {
-            case 0:
-                CSVReader.CargaDeDatos();
-                break;
-            case 1:
-                if (ingresoFecha() != null) {
-                    String mes = ingresoFecha();
-                    ListarPilotosMasMencionados(mes,(MyHashImpl<Long, Tweet>) ListaTweets, ListaPilotos);
-                } else {
-                    break;
-                }
-            case 2:
-                // Lógica para la opción 2
-                break;
-            case 3:
-                // Lógica para la opción 3
-                break;
-            case 4:
-                // Lógica para la opción 4
-                break;
-            case 5:
-                // Lógica para la opción 5
-                break;
-            case 6:
-                // Lógica para la opción 6
-                break;
-            case 7:
-                System.out.println("Saliendo del programa...");
-                break;
-            default:
-                System.out.println("Opcion invalida");
-                break;
-        }
-
-
-}
+    }
     public static String ingresoFecha(){
         Scanner input = new Scanner(System.in);
         System.out.println("Ingrese el año: ");
@@ -115,8 +107,8 @@ public class MainMenu {
         public static Lista<Piloto> ListaPilotos;
         public static void CargaDeDatos() {
             String csvFile = "C:/Users/santi/Downloads/archivosCSV/f1_dataset_test.csv";
-            ListaUsuarios = new MyHashImpl<>(100000);// la lista de usuarios es un hash
-            ListaTweets = new MyHashImpl<>(10000); // la lista de tweets es una lista enlazada
+            ListaUsuarios = new MyHashImpl<>(10000000);// la lista de usuarios es un hash
+            ListaTweets = new MyHashImpl<>(10000000); // la lista de tweets es una lista enlazada
             ListaPilotos = new ListaEnlazada<>(); // la lista de pilotos es una lista enlazada
             int cantidadTweets = 0;
 
@@ -158,7 +150,8 @@ public class MainMenu {
                 } catch(IOException e){
                     e.printStackTrace();
                 }
-
+            System.out.println("EL tamaño de la lista de tweets es: " + cantidadTweets);
+            System.out.println("EL tamaño de la lista de usuarios es: " + ListaUsuarios.elementosEnTabla());
 //********************CargaNombresPilotostxt*************************
             try (FileReader fileReader = new FileReader("C:/Users/santi/Downloads/archivosCSV/drivers.txt");
                  BufferedReader bufferedReader = new BufferedReader(fileReader)) {

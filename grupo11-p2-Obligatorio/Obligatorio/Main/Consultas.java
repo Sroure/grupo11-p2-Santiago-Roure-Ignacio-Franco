@@ -26,7 +26,6 @@ public class Consultas {
                             ListaPilotos.get(j).setCantidadMencion(ListaPilotos.get(j).getCantidadMencion() + 1);
                             mencionesPilotos.insert(ListaPilotos.get(j));// ahora lo que quiero es insertarlos en la lista menciones pilotos;
                             break;
-
                         }
                         for (int x = 0; x < 10; x++) {
                             System.out.println(mencionesPilotos.getMax().getNombre());
