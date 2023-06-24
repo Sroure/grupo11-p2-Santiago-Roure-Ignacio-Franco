@@ -1,5 +1,7 @@
 package Hash;
 
+import java.util.Objects;
+
 public class HashNode<K,V> {
     private K key;
     private V value;
@@ -33,4 +35,16 @@ public class HashNode<K,V> {
         this.deleted = deleted;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HashNode<?, ?> hashNode = (HashNode<?, ?>) o;
+        return Objects.equals(key, hashNode.key) && Objects.equals(value, hashNode.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
+    }
 }
