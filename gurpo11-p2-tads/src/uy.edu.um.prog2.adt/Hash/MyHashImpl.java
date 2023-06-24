@@ -33,13 +33,14 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
     @Override
     public void insert(K key, V value) {
         int index = HashFunction(key);
+        if (index < 0) {index = index * (-1);}// para que no de negativo
         HashNode<K, V> node = new HashNode<>(key, value);
         if (hashTable[index] == null || hashTable[index].isDeleted()) {
             hashTable[index] = node;
         }else{
             int i = 1;
             int newPosition = ((key.hashCode() + linearCollision(i)) % size);
-            while(hashTable[index] != null && !hashTable[newPosition].isDeleted() && i <= size){
+            while(hashTable[newPosition] != null && !hashTable[newPosition].isDeleted() && i <= size){
                 if (hashTable[newPosition].getKey().equals(key)){
                     hashTable[newPosition].setValue(value);
                     return;
@@ -112,7 +113,7 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
                 i++;
                 newPosition = ((key.hashCode() + linearCollision(i)) % size);
             }
-            if (i <= size && hashTable[newPosition].getKey().equals(key) && !hashTable[newPosition].isDeleted()) {
+            if (i <= size && hashTable[newPosition] != null && hashTable[newPosition].getKey().equals(key) && !hashTable[newPosition].isDeleted()) {
                 return true;
             }
             else{
