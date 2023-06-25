@@ -22,10 +22,11 @@ public class User implements Comparable<User> {
     }
     // tengo que agregar los tweets de cada usuario
 
-    public User(long id, String name, boolean verificado) {
+    public User(long id, String name, boolean verificado, String fechaCreado) {
         this.id = id;
         this.name = name;
         this.verificado = verificado;
+        this.fechaCreado = fechaCreado ;
     }
 
     public long getId() {

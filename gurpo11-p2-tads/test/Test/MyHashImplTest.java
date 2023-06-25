@@ -44,6 +44,7 @@ class MyHashImplTest {
         assertEquals(false, hash.search(2));
         assertEquals(true, hash.search(11));
         assertEquals("hola", hash.get(11));
+        assertEquals(1, hash.ElementosEnhash());
 
     }
 }

@@ -1,6 +1,7 @@
 package BinarySearchTree;
 import LinkedList.Lista;
 import LinkedList.ListaEnlazada;
+import LinkedList.Nodo;
 
 
 public class BinarySearchTreeImpl<K extends Comparable<K>, T> implements MyTree<K,T>{
@@ -83,13 +84,41 @@ public class BinarySearchTreeImpl<K extends Comparable<K>, T> implements MyTree<
     }
 
     @Override
-    public Lista inOrder() {
-        Lista inOrderTraversal = new ListaEnlazada();
+    public Lista<T> inOrder() {
+        Lista<T> inOrderTraversal = new ListaEnlazada();
         if (this.root != null){
             this.root.inOrderTraversal(inOrderTraversal);
         }
         return inOrderTraversal;
     }
+    @Override
+    public Lista<T> postorder() {
+        Lista<T> list = new ListaEnlazada();
+        TreeNode<K,T> currentNode = this.root;
+        while (currentNode != null){
+            if (currentNode.rightChild == null){
+                list.agregar(currentNode.data);
+                currentNode = currentNode.leftChild;
+            }else{
+                TreeNode<K,T> sucesor = currentNode.rightChild;
+                while (sucesor.leftChild != null && sucesor.leftChild != currentNode){
+                    sucesor = sucesor.leftChild;
+                }
+                if (sucesor.leftChild == null){
+                    sucesor.leftChild = currentNode;
+                    currentNode = currentNode.rightChild;
+                }else{
+                    sucesor.leftChild = null;
+                    list.agregar(currentNode.data);
+                    currentNode = currentNode.leftChild;
+                }
+            }
+        }
+
+        return list;
+
+    }
+
 
     @Override
     public int countLeaf() {

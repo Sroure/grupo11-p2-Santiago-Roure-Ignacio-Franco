@@ -92,7 +92,7 @@ public class ListaEnlazada<T extends Comparable<T>> implements Lista<T>, MyStack
         nodoActual = primero;
         int count = 0;
         if (nodoActual == null) {
-            System.out.println("El largo de la lista es " + count);
+            return count;
         } else {
             count = 1;
             while (nodoActual != null) {
@@ -100,7 +100,7 @@ public class ListaEnlazada<T extends Comparable<T>> implements Lista<T>, MyStack
                 count++;
             }
             count = count - 1;
-            System.out.println("El largo de la lista es " + count);
+
         }
         return count;
     }
@@ -142,11 +142,21 @@ public class ListaEnlazada<T extends Comparable<T>> implements Lista<T>, MyStack
         }                                                          // nodo entonces no existe
 
     }
-
     @Override
-    public T get(int Position) {
+    public T get(int position) {
+        Nodo<T> temp = this.primero;
+        int i = 0;
+        while(temp != null){
+            if(i == position){
+                return temp.getDato();
+            }else{
+                temp = temp.getSiguiente();
+                i++;
+            }
+        }
         return null;
     }
+
 
     @Override
     public void imprimirDatos() {

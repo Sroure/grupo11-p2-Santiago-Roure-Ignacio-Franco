@@ -5,7 +5,7 @@ public interface MyHash<K, V> {
     void delete(K key);
     boolean search(K key);
     V get(K key);
-    int elementosEnTabla();
+    int ElementosEnhash();
 
 
 }

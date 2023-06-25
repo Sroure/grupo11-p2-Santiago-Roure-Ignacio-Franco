@@ -6,6 +6,7 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
     private int size;// capacidad del hash
     // no confundir con elementos en el hash, son cosas distintas
     // el size puede incluir elementos borrados
+    private int contadorElementos = 0;// elementos que hay en el hash
 
     public MyHashImpl(int size) {
         if (size <= 0) throw new IllegalArgumentException("Size tiene que ser mayor a 0");
@@ -20,16 +21,7 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
     private int linearCollision(int i){
         return i+1;
     }
-    @Override
-    public int elementosEnTabla() {// estos son los elementos que hay en el hash
-        int contador = 0;// todos los elementos que no esten borrados o que no sean null
-        for (int i = 0; i< size;i++){
-            if (hashTable[i] != null && !hashTable[i].isDeleted()){
-                contador++;
-            }
-        }
-        return contador;
-    }
+
     @Override
     public void insert(K key, V value) {
         int index = HashFunction(key);
@@ -37,6 +29,7 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
         HashNode<K, V> node = new HashNode<>(key, value);
         if (hashTable[index] == null || hashTable[index].isDeleted()) {
             hashTable[index] = node;
+            contadorElementos++;
         }else{
             int i = 1;
             int newPosition = ((key.hashCode() + linearCollision(i)) % size);
@@ -76,6 +69,7 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
         int lugar = key.hashCode() % size;
         if (hashTable[lugar] != null && hashTable[lugar].getKey().equals(key)) {
             hashTable[lugar].setDeleted(true);
+            contadorElementos--;
         } else {
             int i = 1;
             int newPosition = ((key.hashCode() + linearCollision(i)) % size);
@@ -85,10 +79,15 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
             }
             if (i <= size) {
                 hashTable[newPosition].setDeleted(true);
+                contadorElementos--;
             }
         }
 
 
+    }
+    @Override
+    public int ElementosEnhash() {
+        return contadorElementos;
     }
 
     @Override
@@ -122,11 +121,14 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
         }
     }
 
+
     @Override
     public V get(K key) {
         int lugar = key.hashCode() % size;
+        if(lugar < 0){
+            lugar = lugar * -1;
+        }
         int i = 1;
-
         if(hashTable[lugar] == null){
             return null;
         }
@@ -141,9 +143,15 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
         }
         else {
             int newPosition = ((key.hashCode() + linearCollision(i)) % size);
+            if(newPosition < 0){
+                newPosition = newPosition * -1;
+            }
             while (i <= size && hashTable[newPosition] != null && !hashTable[newPosition].isDeleted() && !hashTable[newPosition].getKey().equals(key)) {
                 i++;
                 newPosition = ((key.hashCode() + linearCollision(i)) % size);
+                if(newPosition < 0){
+                    newPosition = newPosition * -1;
+                }
             }
             if (hashTable[newPosition] == null || hashTable[newPosition].isDeleted()) {
                 return null;
@@ -152,6 +160,10 @@ public class MyHashImpl<K,V> implements MyHash<K,V> {
             return (V) hashTable[newPosition].getValue();
         }
     }
+
+
+
+
     public void fillHashTableNull(HashNode[] hashTable){
         for (int i = 0; i < size; i++) {
             hashTable[i] = null;

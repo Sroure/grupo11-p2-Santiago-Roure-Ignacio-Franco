@@ -11,7 +11,8 @@ public interface MyTree <K ,T>{
     int countCompleteElements();
     void vaciarTree();
 
-    Lista inOrder();
+    Lista<T> inOrder();
+    Lista<T> postorder();
 
 
 }

@@ -6,9 +6,9 @@ public class Piloto implements Comparable<Piloto> {
     private String nombre;
     private int cantidadMencion;
 
-    public Piloto(String nombre, int cantidadMencion) {
+    public Piloto(String nombre) {
         this.nombre = nombre;
-        this.cantidadMencion = cantidadMencion;
+        this.cantidadMencion = 0;
     }
 
     public String getNombre() {
