@@ -7,5 +7,4 @@ public interface MyHash<K, V> {
     V get(K key);
     int ElementosEnhash();
 
-
 }

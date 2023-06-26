@@ -1,5 +1,7 @@
 package Entities;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class User implements Comparable<User> {
@@ -7,6 +9,7 @@ public class User implements Comparable<User> {
     private String name;
     private boolean verificado;
     private String fechaCreado;
+    private int cantidadTweets;
 
     @Override
     public boolean equals(Object o) {
@@ -26,7 +29,8 @@ public class User implements Comparable<User> {
         this.id = id;
         this.name = name;
         this.verificado = verificado;
-        this.fechaCreado = fechaCreado ;
+        this.fechaCreado = fechaCreado;
+        this.cantidadTweets = 0;
     }
 
     public long getId() {
@@ -59,6 +63,14 @@ public class User implements Comparable<User> {
 
     public void setFechaCreado(String fechaCreado) {
         this.fechaCreado = fechaCreado;
+    }
+
+    public int getCantidadTweets() {
+        return cantidadTweets;
+    }
+
+    public void incrementarCantidadTweets() {
+        this.cantidadTweets++;
     }
 
     // Funcion compare to para comparar usuarios

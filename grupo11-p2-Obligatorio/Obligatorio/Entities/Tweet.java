@@ -8,13 +8,16 @@ public class Tweet {
     private String source;
     private Boolean isRetweet;
     private String fechaTweet;
+    private int iduser;
 
-    public Tweet(long id, String content, String source,String fechaTweet ,Boolean isRetweet) {
+    public Tweet(long id, String content, String source,String fechaTweet ,Boolean isRetweet, int iduser) {
         this.id = id;
         this.content = content;
         this.source = source;
         this.isRetweet = isRetweet;
         this.fechaTweet = fechaTweet;
+        this.iduser = iduser;
+
 
 
     }
@@ -57,6 +60,14 @@ public class Tweet {
 
     public void setFechaTweet(String fechaTweet) {
         this.fechaTweet = fechaTweet;
+    }
+
+    public int getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(int iduser) {
+        this.iduser = iduser;
     }
 
     @Override

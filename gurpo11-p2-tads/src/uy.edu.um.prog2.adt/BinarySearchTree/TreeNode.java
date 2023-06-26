@@ -18,7 +18,6 @@ public class TreeNode<K extends Comparable<K>, T> {
     // Metodo recursivo de add
     void add(K key, T data) {
         TreeNode<K, T> elementoNuevo = new TreeNode<>(key, data);
-
         if (key.compareTo(this.key)>0){ // aca el compare to se fija si el key es mayor a la raiz o en el nodo actual
             if (rightChild == null){// si no hay nada a la derecha
                 rightChild = elementoNuevo;
